@@ -1,0 +1,96 @@
+
+@token = {{auth.response.body.access_token}}
+
+###
+# @name auth
+POST http://localhost:8080/auth/realms/Customers/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+client_id=manage-users
+&client_secret=wYbgtv9wwnZDMo3gkTZITb0mKOW5QtdY
+&scope=email
+&grant_type=client_credentials
+
+###
+# @name list_users
+GET http://localhost:8080/auth/admin/realms/Customers/users
+Authorization: Bearer {{token}}
+
+###
+# @name list_users_by_attribute
+GET http://localhost:8080/auth/admin/realms/Customers/users?q=extid:9a07fd8b-8500-4066-8216-d6331fe2689a
+Authorization: Bearer {{token}}
+
+###
+# @name list_users_by_username
+GET http://localhost:8080/auth/admin/realms/Customers/users?username=user2@gmail.com&exact=true&enabled=true
+Authorization: Bearer {{token}}
+
+###
+# @name list_users_credentials
+GET http://localhost:8080/auth/admin/realms/Customers/users/3494febd-fc03-45d5-b960-63f658b44e14/credentials
+Authorization: Bearer {{token}}
+
+###
+# @name create_user
+POST http://localhost:8080/auth/admin/realms/Customers/users
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "username": "vicki@gmail.com",
+    "email": "vicki@gmail.com",
+    "enabled": true,
+    "emailVerified": true,
+    "attributes": {
+        "name": "Vicki Liou"
+    },
+    "credentials": [
+        {
+            "type": "password",
+            "value": "123456",
+            "temporary": false
+        }
+    ]
+}
+
+###
+# @name delete_user
+DELETE http://localhost:8080/auth/admin/realms/Customers/users/784b238b-604a-456f-a29f-8c7465db9582
+Authorization: Bearer {{token}}
+
+
+###
+# @name list_client
+GET http://localhost:8080/auth/admin/realms/Customers/clients/8f6ecd87-355c-43a2-af6a-e7094d6b9662
+Authorization: Bearer {{token}}
+
+
+### 
+# @name create_client
+POST http://localhost:8080/auth/admin/realms/Customers/clients
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "attributes": {
+        "cid":"customer1"
+    },
+    "protocolMappers": [
+        {
+            "name":"CustomerID",
+            "protocol":"openid-connect",
+            "protocolMapper":"oidc-hardcoded-claim-mapper",
+            "consentRequired": false,
+            "config": {
+                "claim.value": "customer1",
+                "userinfo.token.claim": "true",
+                "id.token.claim": "true",
+                "access.token.claim": "true",
+                "claim.name": "customerId",
+                "jsonType.label": "String",
+                "access.tokenResponse.claim": "false"
+            }
+        }
+    ]
+}

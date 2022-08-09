@@ -14,3 +14,15 @@
 2. Turn on the `Revoke Refresh Token` configuration
 3. A new option will appear below with the name `Refresh Token Max Reuse`, if you left the value as `0`, it will allow that the `refresh_token` can just refresh the `access_token` once. So you can configure how many times that can occur by setting another value to it. 
 4. When the max of reuse is reached the Keycloak will invalidate all refresh tokens.
+
+```bash
+## Refresh token request
+
+curl --location -s -X POST 'http://my-keycloak:8080/auth/realms/{REALM_NAME}/protocol/openid-connect/token' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'client_id=<client_id>' \
+--data-urlencode 'client_secret=<secret>' \
+--data-urlencode 'refresh_token=<refresh_token>'
+--data-urlencode 'grant_type=refresh_token'
+
+```
